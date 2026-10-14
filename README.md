@@ -1,5 +1,6 @@
 # Plate: a serverless protein, sleep, and training tracker
 
+**Live app:** https://d88lgmeztl9fe.cloudfront.net
 A phone-friendly web app I use daily to hit my protein goal, get 8 hours of
 sleep, and see how sleep affects my training. Built entirely on AWS
 serverless services, defined in Terraform, and costing about $0–3 per month.
