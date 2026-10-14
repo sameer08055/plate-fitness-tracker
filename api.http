@@ -1,0 +1,73 @@
+# Test requests for the VS Code "REST Client" extension.
+#
+# Every request now needs your login token. To get one:
+#   1. Open the app in your browser and sign in.
+#   2. Open the developer console (Cmd + Option + J in Chrome).
+#   3. Run:  JSON.parse(localStorage["plate.tokens"]).accessToken
+#   4. Paste the result below. Tokens expire after 1 hour.
+#
+# Don't commit your real URL or token.
+
+@baseUrl = https://REPLACE_ME.execute-api.us-east-2.amazonaws.com
+@token = PASTE_ACCESS_TOKEN
+@today = 2026-10-11
+
+### See a day's totals and progress
+GET {{baseUrl}}/days/{{today}}
+Authorization: Bearer {{token}}
+
+### Set your daily goals
+PUT {{baseUrl}}/goals
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "calories": 2500,
+  "protein_g": 150,
+  "sleep_hours": 8,
+  "reminders": true,
+  "utc_offset_minutes": -240
+}
+
+### Log a meal
+POST {{baseUrl}}/meals
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "date": "{{today}}", "name": "Chicken, rice and broccoli", "calories": 650, "protein_g": 45 }
+
+### Estimate a meal from a description (uses Bedrock, nothing is saved)
+POST {{baseUrl}}/meals/parse
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "text": "3 eggs, 2 slices of toast and a protein shake" }
+
+### Look up a food in the USDA database
+GET {{baseUrl}}/foods/search?q=chicken breast cooked
+Authorization: Bearer {{token}}
+
+### Look up a packaged food by barcode
+GET {{baseUrl}}/barcode/737628064502
+Authorization: Bearer {{token}}
+
+### Log an exercise
+POST {{baseUrl}}/workouts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "date": "{{today}}", "exercise": "Back squat", "sets": 5, "reps": 5, "weight": 225 }
+
+### Log sleep (use the date you woke up)
+POST {{baseUrl}}/sleep
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "date": "{{today}}", "hours": 7.5 }
+
+### Last 7 days of insights
+GET {{baseUrl}}/insights?end={{today}}&days=7
+Authorization: Bearer {{token}}
+
+### Without a token this should fail with 401 Unauthorized
+GET {{baseUrl}}/days/{{today}}

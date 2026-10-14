@@ -1,0 +1,10 @@
+# Copy this file to terraform.tfvars and fill it in.
+# terraform.tfvars is in .gitignore, so it won't be committed.
+aws_region         = "us-east-2"
+alert_email        = "you@example.com"
+monthly_budget_usd = 5
+timezone           = "America/New_York"
+reminder_hour      = 20
+
+# Optional: a free key from https://api.data.gov/signup/ (default is DEMO_KEY)
+# usda_api_key = "your-key"

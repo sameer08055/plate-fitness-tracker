@@ -1,0 +1,422 @@
+/*
+  Plate: colors follow Olympic bumper plates, so each thing you track
+  always has the same color.
+    red    = protein      blue  = sleep
+    yellow = calories     green = training
+*/
+:root {
+  --floor: #E4E5E0;   /* page background: concrete gym floor */
+  --chalk: #F8F8F5;   /* panels */
+  --iron: #22272A;    /* main text */
+  --steel: #5F676B;   /* secondary text */
+  --rule: #CCCFC9;    /* borders and empty bar track */
+  --red: #C42F2A;
+  --blue: #1F55A3;
+  --yellow: #C98C07;
+  --green: #2E7A4A;
+
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+
+  --radius: 6px;
+  --space: 1rem;
+  color-scheme: light dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --floor: #16191B;   /* rubber gym flooring */
+    --chalk: #202427;
+    --iron: #ECEDE9;
+    --steel: #9AA2A6;
+    --rule: #363C40;
+    --red: #E5524C;
+    --blue: #5B8DDB;
+    --yellow: #E8B030;
+    --green: #4FA872;
+  }
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--floor);
+  color: var(--iron);
+  font: 400 1rem/1.5 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] { display: none !important; }
+
+h1, h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 0.5rem;
+}
+
+h2 { font-size: 1.25rem; }
+
+p { margin: 0 0 0.75rem; }
+
+.muted, .hint { color: var(--steel); }
+.hint { font-size: 0.9rem; }
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 4.5rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.wordmark.small { font-size: 1.6rem; }
+
+/* ---------- Layout ---------- */
+
+.welcome {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 18vh 1.5rem 2rem;
+}
+
+.welcome p { font-size: 1.15rem; max-width: 26ch; }
+
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  background: var(--floor);
+}
+
+.day-nav { display: flex; align-items: center; gap: 0.25rem; }
+
+.day-label {
+  min-width: 8.5rem;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.view {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0.5rem 1.25rem 7rem; /* room for the tab bar */
+}
+
+/* ---------- Today: the protein number is the one bold element ---------- */
+
+.hero { margin: 1rem 0 2rem; }
+
+.hero-number {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(6rem, 30vw, 9.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: var(--red);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-number .unit { font-size: 0.4em; letter-spacing: 0; margin-left: 0.05em; }
+
+.hero-caption {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0.25rem 0 0.75rem;
+}
+
+/* Progress bars look like a loaded barbell sleeve: thick, with a collar at the end. */
+.bar {
+  position: relative;
+  height: 1.1rem;
+  background: var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar.thin { height: 0.45rem; }
+
+.bar .fill {
+  height: 100%;
+  width: 0;
+  border-radius: 3px;
+  background: var(--fill-color, var(--iron));
+  transition: width 0.4s ease;
+}
+
+.bar.protein .fill, .protein .fill { --fill-color: var(--red); }
+.calories .fill { --fill-color: var(--yellow); }
+.sleep .fill { --fill-color: var(--blue); }
+
+.bar.protein .fill { box-shadow: inset -0.35rem 0 0 rgba(0, 0, 0, 0.18); }
+
+.metrics {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.metric h2 { font-size: 1rem; font-weight: 600; margin-bottom: 0.1rem; }
+.metric p { margin-bottom: 0.35rem; }
+.metric strong { font-family: var(--display); font-size: 1.6rem; font-weight: 600; }
+
+.metric.calories h2 { color: var(--yellow); }
+.metric.sleep h2 { color: var(--blue); }
+.metric.training h2 { color: var(--green); }
+
+.entries h2 { margin-top: 1.5rem; }
+
+.entry-list, .result-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entry-list li, .result-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entry-list .detail { color: var(--steel); font-size: 0.9rem; }
+
+.empty { color: var(--steel); padding: 0.5rem 0; }
+
+.notice {
+  background: var(--chalk);
+  border-left: 4px solid var(--red);
+  border-radius: var(--radius);
+  padding: var(--space);
+  margin: 1rem 0;
+}
+
+/* ---------- Panels and forms ---------- */
+
+.panel {
+  background: var(--chalk);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.1rem 1.25rem;
+  margin: 0 0 1rem;
+}
+
+/* A colored left edge says which plate color this section feeds. */
+.protein-edge { border-left: 4px solid var(--red); }
+.sleep-edge { border-left: 4px solid var(--blue); }
+.training-edge { border-left: 4px solid var(--green); }
+
+input, textarea, select {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--floor);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.7rem;
+}
+
+textarea { resize: vertical; margin-bottom: 0.75rem; }
+
+label { display: block; font-size: 0.9rem; font-weight: 500; }
+label input { margin-top: 0.25rem; }
+
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.grid-form .wide { grid-column: 1 / -1; }
+
+.check { display: flex; align-items: center; gap: 0.6rem; font-weight: 400; }
+.check input { width: auto; margin: 0; accent-color: var(--red); }
+
+.inline-form { display: flex; gap: 0.5rem; }
+.inline-form input { flex: 1; min-width: 0; }
+
+.scan-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.scan-row .inline-form { flex: 1; min-width: 12rem; }
+
+#scanner { margin-top: 1rem; border-radius: var(--radius); overflow: hidden; }
+
+#portion, #estimate-result { margin-top: 1rem; }
+
+.estimate-table { width: 100%; border-collapse: collapse; margin-bottom: 0.75rem; font-size: 0.95rem; }
+.estimate-table th { text-align: left; font-weight: 500; color: var(--steel); }
+.estimate-table td, .estimate-table th { padding: 0.4rem 0.25rem; border-bottom: 1px solid var(--rule); }
+.estimate-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.unmatched { color: var(--steel); font-style: italic; }
+
+.button-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ---------- Buttons ---------- */
+
+.button {
+  font: 600 1rem/1 var(--body);
+  color: var(--iron);
+  background: transparent;
+  border: 1.5px solid var(--iron);
+  border-radius: var(--radius);
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.button.primary { background: var(--iron); color: var(--floor); }
+.button.quiet { border-color: transparent; color: var(--steel); padding-left: 0; }
+.button:disabled { opacity: 0.5; cursor: wait; }
+
+.icon-button, .delete {
+  font: inherit;
+  background: none;
+  border: none;
+  color: var(--steel);
+  cursor: pointer;
+}
+
+.icon-button { font-size: 1.8rem; line-height: 1; padding: 0.1rem 0.6rem; }
+.icon-button:disabled { opacity: 0.25; cursor: default; }
+.delete { font-size: 0.9rem; text-decoration: underline; padding: 0.25rem; }
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+/* ---------- Trends ---------- */
+
+.segmented { display: inline-flex; gap: 0.25rem; margin: 0.5rem 0 1.25rem; }
+
+.segmented button {
+  font: 500 0.95rem var(--body);
+  color: var(--steel);
+  background: none;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed="true"] { color: var(--iron); border-color: var(--iron); }
+
+.trend-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stat span { font-size: 0.9rem; color: var(--steel); }
+.stat.protein strong { color: var(--red); }
+.stat.sleep strong { color: var(--blue); }
+.stat.training strong { color: var(--green); }
+.stat.wide { grid-column: 1 / -1; }
+
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 9rem;
+  overflow-x: auto;
+}
+
+.trend-day {
+  flex: 1 0 0.9rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.trend-bars {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.trend-day small {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--steel);
+  padding-top: 0.25rem;
+}
+
+.trend-day span { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; }
+.trend-day .p { background: var(--red); }
+.trend-day .s { background: var(--blue); }
+.trend-day .none { background: var(--rule); }
+
+/* ---------- Tab bar and toast ---------- */
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--chalk);
+  border-top: 1px solid var(--rule);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tabbar button {
+  font: 600 1.05rem var(--display);
+  color: var(--steel);
+  background: none;
+  border: none;
+  border-top: 3px solid transparent;
+  padding: 0.8rem 0 0.9rem;
+  cursor: pointer;
+}
+
+.tabbar button[aria-current="page"] { color: var(--iron); border-top-color: var(--iron); }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 4;
+  max-width: calc(100% - 2rem);
+  background: var(--iron);
+  color: var(--floor);
+  padding: 0.7rem 1.1rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+
+.toast.error { background: var(--red); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bar .fill { transition: none; }
+}
